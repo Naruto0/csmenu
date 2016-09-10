@@ -5,8 +5,8 @@ from queue import Queue
 import time
 import random
 
-_port_from = 27015
-_port_to = 27099
+_port_from = 27020
+_port_to = 27036
 
 _ip = 'csko.cz'
 _mod = 'cstrike'
@@ -28,7 +28,11 @@ Returns list of data."""
 
 def pf(port, ip, mod):
     osock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    osock.connect((ip,port))
+    try:
+        osock.connect((ip,port))
+    except socket.gaierror:
+        return ("[error]", "No internet connection")
+
     osock.settimeout(1.5)
     osock.send(b'\377\377\377\377TSource Engine Query\0')
 
@@ -74,7 +78,11 @@ def src_query(ip, mod, port_from, port_to, threads=10):
                 servers.append((server[1],server[0]))
             else:
                 errors.append(server[1])
-        return (servers, errors, socket.gethostbyname(ip))
+        try:
+            host_alias = socket.gethostbyname(ip)
+        except socket.gaierror:
+            host_alias = "unreachable"
+        return (servers, errors, host_alias)
 
     # Create the queue and thread pool.
     for i in range(threads):
@@ -83,7 +91,7 @@ def src_query(ip, mod, port_from, port_to, threads=10):
          t.start()
 
     # stuff work items on the queue (in this case, just a number).
-    for port in range(_port_from,_port_to):
+    for port in range(port_from,port_to):
         q.put((port, ip, mod))
 
     q.join()       # block until all tasks are done

@@ -72,10 +72,13 @@ class scrollBox(tk.Frame):
         '''Clear list box'''
         self.box.delete(0, "end")
 
-    def getIndex(self):
+    def get_index(self):
         '''gets index number of selected items'''
         item = self.box.curselection()
         return isInt(item[0])
+
+    def get_list(self):
+        return self.box.get(0,end)
 
 class MainWindow(tk.Frame):
     '''Draws and handles application main window'''
@@ -96,6 +99,8 @@ class MainWindow(tk.Frame):
         self.workMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.workMenu.add_command(label="Fetch", command=self.fetch)
         self.workMenu.add_command(label="Generate", command=self.generate)
+        self.workMenu.add_separator()
+        self.workMenu.add_command(label="Make aliases", command=self.aliases)
         self.mainMenu.add_cascade(label="Do", menu=self.workMenu)
 
         # header bar
@@ -105,9 +110,9 @@ class MainWindow(tk.Frame):
         self.server.pack(side="left")
         self.mod = LabEntry(self.hBar, "Mod:", "cstrike")
         self.mod.pack(side="left")
-        self.pFrom = LabEntry(self.hBar, "Port range from:", 27015)
+        self.pFrom = LabEntry(self.hBar, "Port range from:", 27030)
         self.pFrom.pack(side="left")
-        self.pTo = LabEntry(self.hBar, "to:", 27099)
+        self.pTo = LabEntry(self.hBar, "to:", 27040)
         self.pTo.pack(side="left")
         self.getButton = tk.Button(self.hBar, text="Fetch games", command=self.fetch)
         self.getButton.pack(side="left")
@@ -147,6 +152,10 @@ class MainWindow(tk.Frame):
         self.stat = StatBar(parent)
         self.stat.pack(side="bottom", fill="x")
         self.stat.set("idle")
+
+    def aliases(self):
+        print(self.box.get_list())
+
 
     def fetch(self):
         '''Fetch basic data. Return list'''
@@ -201,8 +210,8 @@ class MainWindow(tk.Frame):
 
     def addGame(self):
         try:
-            if self.q[self.box.getIndex()] not in self.desired:
-                self.desired.append(self.q[self.box.getIndex()])
+            if self.q[self.box.get_index()] not in self.desired:
+                self.desired.append(self.q[self.box.get_index()])
                 # debug --> print self.desired
                 self.stat.set("Game %s added to bottom of your list!" % self.desired[-1][0])
                 self.result_box.clear()
@@ -221,7 +230,7 @@ class MainWindow(tk.Frame):
 
     def popGame(self):
         try:
-            self.desired.pop(self.result_box.getIndex())
+            self.desired.pop(self.result_box.get_index())
             self.result_box.clear()
             self.result_box.update(self.desired)
         except IndexError:
@@ -237,7 +246,7 @@ class MainWindow(tk.Frame):
             pass
         try:
             if self.offset:
-                switch(self.desired, self.result_box.getIndex(), self.offset)
+                switch(self.desired, self.result_box.get_index(), self.offset)
                 self.result_box.clear()
                 self.result_box.update(self.desired)
             else:
