@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-def save(string):
+def save_res(string):
     with open("GameMenu.res", 'w') as text_file:
         text_file.write(string)
 
@@ -22,7 +22,7 @@ def wrap(value):
     except TypeError:
         return '"%s"' % (value)
 
-class menuGen(object):
+class menu_gen(object):
     def __init__(self):
         pass
     def lbStr(self):
@@ -89,7 +89,7 @@ class menuGen(object):
         return content + '}'
 
 def main():
-    f = menuGen()
+    f = menu_gen()
     s = f.generate(testing,ip)
     print(s)
 

@@ -52,7 +52,7 @@ def pf(port, ip, mod):
                 return (port, li[1])
     osock.close()
 
-def srcQuery(ip, mod, port_from, port_to, threads=10):
+def src_query(ip, mod, port_from, port_to, threads=10):
     lock = threading.Lock()
     result = []
     q = Queue()
@@ -92,9 +92,9 @@ def srcQuery(ip, mod, port_from, port_to, threads=10):
 
 def main():
     start = time.perf_counter()
-    q = srcQuery(_ip, _mod, _port_from, _port_to, _threads)
+    q = src_query(_ip, _mod, _port_from, _port_to, _threads)
 
-    print("using func srcQuery()_____________________________________________")
+    print("using func src_query()_____________________________________________")
 
     for s in q[0]:
         print("Server: " + s[0].ljust(40, " ") + "Port:" + str(s[1]))

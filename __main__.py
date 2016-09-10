@@ -2,8 +2,8 @@
 #
 #
 
-from modules.filter import srcQuery
-from modules.generator import menuGen, save
+from modules.filter import src_query
+from modules.generator import menu_gen, save_res
 
 import tkinter as tk
 import tkinter.messagebox as messagebox
@@ -156,7 +156,10 @@ class MainWindow(tk.Frame):
         self.stat.set("Finding games on server IP... this'll take some time")
         # call the ip and port ranged server query, return tuple of three items
         # ([list of ports aviable], [list of encountered minor errors], "host alias translated to ip number")
-        self.query = srcQuery(self.server.entry.get(),self.mod.entry.get(),int(self.pFrom.entry.get()),int(self.pTo.entry.get()))
+        self.query = src_query(self.server.entry.get(),\
+                                self.mod.entry.get(),\
+                                int(self.pFrom.entry.get()),\
+                                int(self.pTo.entry.get()))
         # assign each tuple variable to readable and usable form
         self.q = sorted(self.query[0])
         self.err = (self.query[1])
@@ -188,9 +191,9 @@ class MainWindow(tk.Frame):
     def generate(self):
         '''Generate GameMenu from result_box'''
         if self.desired and self.host:
-            f = menuGen()
+            f = menu_gen()
             s = f.generate(self.desired,self.host)
-            save(s)
+            save_res(s)
             self.stat.set("Hl config generated! Check for GameMenu.res")
         else:
             self.stat.set("You have to select servers and have valid ip!")
