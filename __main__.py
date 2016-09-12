@@ -7,7 +7,6 @@ from modules.generator import menu_gen, save_res, make_cfg
 
 import tkinter as tk
 import tkinter.messagebox as messagebox
-import socket
 
 def switch(ls,idx,ost):
     ls[idx], ls[idx+ost] = ls[idx+ost], ls[idx]
@@ -157,7 +156,7 @@ class MainWindow(tk.Frame):
     def aliases(self):
         for item in self.box.get_list():
             print(item)
-        make_cfg(self.q, socket.gethostbyname(self.server.entry.get()))
+        make_cfg(self.q, self.host)
 
 
     def fetch(self):

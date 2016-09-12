@@ -172,9 +172,8 @@ def read_data():
         data = json.load(infile)
         return data
 
-def make_cfg(data=None, server=None):
+def make_cfg(data, server):
     """make a config out of fetched data"""
-    data, server = read_data()
     data = process(data)
     cfg_string = ''
     for entry in data:
@@ -187,11 +186,11 @@ def make_cfg(data=None, server=None):
     ##    file.write(cfg_string)
 
 def main():
-    """f = menu_gen()
+    f = menu_gen()
     s = f.generate(*read_data())
-    print(s)"""
+    print(s)
 
-    make_cfg()
+    make_cfg(*read_data())
 
 if __name__ == '__main__':
     main()
