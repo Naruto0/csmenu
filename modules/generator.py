@@ -1,4 +1,61 @@
 #! /usr/bin/python
+import json, re
+
+regulars = {
+    r'csko\.cz\s{1,3}\|\s{1,3}': '',
+    r'aim\s?' : 'aim',
+    r'awp' : 'aw',
+    r'b(?:ase)?\s?b(?:uilder)[+]XP\s?': 'bb',
+    r'bh(?:op)\s?' : 'bh',
+    r'cod:mw\s?' : 'cod',
+    r'(?:\.\s-\s1\s)?itemy?\s?': '',
+    r'\s?,\s?fymaps' : 'fy',
+    r'capture\s?the\s?flag\s?' : 'ctf',
+    r'classic' : 'cc',
+    r'd(?:eath)?\s?m(?:atch)?\s?' : 'dm',
+    r'free' : 'fr',
+    r'ffa?\s?' : 'ff',
+    r'death\s?run\s?' : 'dr',
+    r'fun' : 'fn',
+    r'furien\s?' : 'fu',
+    r'fy\s?' : 'fy',
+    r'g(?:un)?\s?g(?:ame)?\s?' : 'gg',
+    r'(?:he)?\s?grenades?' : 'he',
+    r'c21' : '',
+    r'hide\s?&?\s?seek\s?' : 'hns',
+    r'jail\s?break\s?' : 'jb',
+    r'mini' : '',
+    r'jump' : 'jm',
+    r'training' : 't',
+    r'Mega\s?pub(?:lic)?\s?' : 'mg',
+    r'old\s?school' : 'os',
+    r'paint\s?ball\s?' : 'pb',
+    r'rc.....': 'rc',
+    r'rats?\s?(?:maps)?' : 'rm',
+    r'schovka' : 'sch',
+    r'scoutz?\s?knive[zs]\s?' : 'sc',
+    r'snow\s?ball\s?(?:war)?' : 'sb',
+    r'soccer\s?jam' : 'sj',
+    r'super\s?hero\s?' : 'sh',
+    r'\(40 lvl\)' : '',
+    r'surf\s?kill\s?' : 'sk',
+    r'surf\s?speed' : 'ss',
+    r'knife\s?' : 'kn',
+    r'100hp dm' : 'dm',
+    r'super\s?jump' : 'sj',
+    r'u(?:nreal)?\s?t(?:ournament)' : 'ut',
+    r'vanocni\s?server' : 'vs',
+    r'war3\s?' : 'war',
+    r'ft\s?' : 'f',
+    r'ultimate\s?' : 'u',
+    r'zombie\s?' : 'zm',
+    r'revolution\s?' : 'r',
+    r'apokalypsa\s?' : 'a',
+    r'escape' : 'es',
+    r'dust_?2\s' : 'd2',
+    r'inf(?:erno)?\s?' : 'inf',
+    r'only\s?' : '',
+}
 
 def save_res(string):
     with open("GameMenu.res", 'w') as text_file:
@@ -16,11 +73,23 @@ testing = [('csko.cz  |  Zombie', 27017),
 ('csko.cz  |  Jailbreak 2', 27042),
 ('csko.cz  |  Zombie Apokalypsa', 27057)]
 
+
+def process(data):
+
+    for server in data:
+        name = server[0]
+        for expression in regulars:
+            name = re.sub(expression, regulars[expression], name, flags=re.IGNORECASE)
+        server[0] = name
+    return data
+
+
 def wrap(value):
     try:
          return '"%d"' % (value)
     except TypeError:
         return '"%s"' % (value)
+
 
 class menu_gen(object):
     def __init__(self):
@@ -55,7 +124,8 @@ class menu_gen(object):
         ('"#GameUI_GameMenu_Quit"','"Quit"',0)]
         return l
 
-    def generate(self, ls,ip):
+
+    def generate(self, ls, ip):
         content = self.header()
         i = 0
         while i < len(ls):
@@ -88,10 +158,40 @@ class menu_gen(object):
 
         return content + '}'
 
+
+def save_data(data):
+    """another helper function"""
+    print(data)
+    with open('names.txt', 'w') as outfile:
+        json.dump(data, outfile)
+
+
+def read_data():
+    """helper function"""
+    with open('../names.txt', 'r') as infile:
+        data = json.load(infile)
+        return data
+
+def make_cfg(data=None, server=None):
+    """make a config out of fetched data"""
+    data, server = read_data()
+    data = process(data)
+    cfg_string = ''
+    for entry in data:
+        cfg_string += '"alias" "{abbr}" "connect {ip}:{port}"\n'.format(abbr=entry[0],\
+                                                            ip=server,
+                                                            port=entry[1])
+    
+    print(cfg_string)
+    ## with open('aliases.cfg', 'w') as file:
+    ##    file.write(cfg_string)
+
 def main():
-    f = menu_gen()
-    s = f.generate(testing,ip)
-    print(s)
+    """f = menu_gen()
+    s = f.generate(*read_data())
+    print(s)"""
+
+    make_cfg()
 
 if __name__ == '__main__':
     main()

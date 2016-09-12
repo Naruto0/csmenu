@@ -3,10 +3,11 @@
 #
 
 from modules.filter import src_query
-from modules.generator import menu_gen, save_res
+from modules.generator import menu_gen, save_res, make_cfg
 
 import tkinter as tk
 import tkinter.messagebox as messagebox
+import socket
 
 def switch(ls,idx,ost):
     ls[idx], ls[idx+ost] = ls[idx+ost], ls[idx]
@@ -78,7 +79,7 @@ class scrollBox(tk.Frame):
         return isInt(item[0])
 
     def get_list(self):
-        return self.box.get(0,end)
+        return self.box.get(0,'end')
 
 class MainWindow(tk.Frame):
     '''Draws and handles application main window'''
@@ -125,9 +126,9 @@ class MainWindow(tk.Frame):
         self.box.pack(side="left", fill="both", expand="yes")
         self.btnFrame = tk.Frame(self.box_frame)
         self.btnFrame.pack(side="left", fill="both")
-        self.addButton = tk.Button(self.btnFrame, text="->", command=self.addGame)
+        self.addButton = tk.Button(self.btnFrame, text="->", command=self.add_game)
         self.addButton.pack(side="top", fill="x")
-        self.popButton = tk.Button(self.btnFrame, text="<-", command=self.popGame)
+        self.popButton = tk.Button(self.btnFrame, text="<-", command=self.pop_game)
         self.popButton.pack(side="top", fill="x")
         self.moveUp = tk.Button(self.btnFrame, text="Up", command=lambda:self.move("up"))
         self.moveUp.pack(side="top", fill="x")
@@ -154,7 +155,9 @@ class MainWindow(tk.Frame):
         self.stat.set("idle")
 
     def aliases(self):
-        print(self.box.get_list())
+        for item in self.box.get_list():
+            print(item)
+        make_cfg(self.q, socket.gethostbyname(self.server.entry.get()))
 
 
     def fetch(self):
@@ -208,7 +211,7 @@ class MainWindow(tk.Frame):
             self.stat.set("You have to select servers and have valid ip!")
             pass
 
-    def addGame(self):
+    def add_game(self):
         try:
             if self.q[self.box.get_index()] not in self.desired:
                 self.desired.append(self.q[self.box.get_index()])
@@ -228,7 +231,7 @@ class MainWindow(tk.Frame):
         self.result_box.clear()
         self.result_box.update(self.desired)
 
-    def popGame(self):
+    def pop_game(self):
         try:
             self.desired.pop(self.result_box.get_index())
             self.result_box.clear()

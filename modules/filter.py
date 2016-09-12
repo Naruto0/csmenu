@@ -14,6 +14,7 @@ _mod = 'cstrike'
 _threads = 10
 
 # lock to serialize console output
+lock = threading.Lock()
 
 def prefix():
     return "[pFilter message]: "
@@ -57,7 +58,6 @@ def pf(port, ip, mod):
     osock.close()
 
 def src_query(ip, mod, port_from, port_to, threads=10):
-    lock = threading.Lock()
     result = []
     q = Queue()
 
