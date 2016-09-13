@@ -27,8 +27,10 @@ I'm taking no responsibility for damaging your files what so ever so always back
 * renamed project to csmenu
 * thread support for resolving hostneme ports
 * only python 3
+* config generator ability
 
 
 ### alpha 0.1.0
 * first app
 * version for both python 2.7 and 3.5
+

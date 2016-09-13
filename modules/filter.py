@@ -1,4 +1,5 @@
-#!python3
+#! /usr/bin/python3
+
 import errno, socket
 import threading
 from queue import Queue

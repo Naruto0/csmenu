@@ -1,6 +1,4 @@
-#! /usr/bin/python
-#
-#
+#! /usr/bin/python3
 
 from modules.filter import src_query
 from modules.generator import menu_gen, save_res, make_cfg
