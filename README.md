@@ -10,7 +10,7 @@ name@host:~/csmenu$ python3 __main__.py
 copy ```GameMenu.res``` to cstrike folder  e.g. ```.../Half-life/cstrike/```
 
 
-## prequisities
+## prequiresities
 
 * python 3
 * tkinter module
