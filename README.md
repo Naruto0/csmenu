@@ -1,5 +1,7 @@
 # csmenu
 
+![Screenshot](csmenu_screenshot.png)
+
 ## usage
 GUI App that Generates old cstrike's *res menu from given server. Just feed with ip of your favorite server and use port range to find all cs 1.6 games and mods based upon it. Using Python with Tkinter as wm.
 
