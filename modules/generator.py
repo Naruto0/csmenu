@@ -178,7 +178,7 @@ def make_cfg(data, server):
     data = process(data)
     cfg_string = ''
     for entry in data:
-        cfg_string += '"alias" "{abbr}" "connect {ip}:{port}"\n'.format(abbr=entry[0],\
+        cfg_string += 'alias {abbr} "connect {ip}:{port}"\n'.format(abbr=entry[0],\
                                                             ip=server,
                                                             port=entry[1])
     
