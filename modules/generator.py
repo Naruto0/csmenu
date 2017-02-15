@@ -33,7 +33,7 @@ regulars = {
     r'paint\s?ball\s?' : 'pb',
     r'rc.....': 'rc',
     r'rats?\s?(?:maps)?' : 'rm',
-    r'schovka' : 'sch',
+    r'schovka\s?' : 'sch',
     r'scoutz?\s?knive[zs]\s?' : 'sc',
     r'snow\s?ball\s?(?:war)?' : 'sb',
     r'soccer\s?jam' : 'sj',
@@ -56,6 +56,9 @@ regulars = {
     r'dust_?2\s' : 'd2',
     r'inf(?:erno)?\s?' : 'inf',
     r'only\s?' : '',
+    r'trouble\sin\sterrorist\stown\s?' : 'ttt',
+    r'kre+dz\scup\s?' : 'krc',
+    r'\s?,\s?' : ''
 }
 
 def save_res(string):
@@ -76,13 +79,14 @@ testing = [('csko.cz  |  Zombie', 27017),
 
 
 def process(data):
+    new_data = []
 
     for server in data:
         name = server[0]
         for expression in regulars:
             name = re.sub(expression, regulars[expression], name, flags=re.IGNORECASE)
-        server[0] = name
-    return data
+        new_data.append([name, server[1]])
+    return new_data
 
 
 def wrap(value):
@@ -182,9 +186,8 @@ def make_cfg(data, server):
                                                             ip=server,
                                                             port=entry[1])
     
-    print(cfg_string)
-    ## with open('aliases.cfg', 'w') as file:
-    ##    file.write(cfg_string)
+    with open('aliases.cfg', 'w') as file:
+        file.write(cfg_string)
 
 def main():
     f = menu_gen()
