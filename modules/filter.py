@@ -24,7 +24,7 @@ def parsing(data):
     """Parses recieved data to readable form. Null('\0') is delimiter
 Returns list of data."""
     data = data.replace(b'\377',b'')
-    data = data.decode(encoding='UTF-8')
+    data = data.decode('UTF-8')
     li = data.split('\0')
     return li
 
